@@ -11,5 +11,6 @@ module.exports = {
         'views': '@/views',
       }
     }
-  }
+  },
+  lintOnSave: false
 }
