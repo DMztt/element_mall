@@ -19,13 +19,19 @@
           :collapse="isActive"
           :collapse-transition="false"
           router
+          :default-active="activePath"
         >
           <el-submenu :index="'/' + item.id" v-for="(item, index) in menuList" :key="item.id">
             <template slot="title">
               <i :class="icons[item.id]"></i>
               <span>{{item.authName}}</span>
             </template>
-            <el-menu-item :index="'/' + item.path" v-for="(item, i) in menuList[index].children" :key="item.id">
+            <el-menu-item
+                  :index="'/' + item.path"
+                  v-for="item in menuList[index].children"
+                  :key="item.id"
+                  @click="menuItemClick(item.path)"
+                  >
               <template slot="title">
                 <i class="el-icon-s-operation"></i>
                 <span>{{item.authName}}</span>
@@ -55,7 +61,8 @@ export default {
         102: 'el-icon-s-order',
         145: 'el-icon-s-marketing',
       },
-      isActive: false
+      isActive: false,
+      activePath: '/users'
     }
   },
   mounted() {
@@ -68,17 +75,18 @@ export default {
     },
     getMenuList() {
       getMenuList().then(res => {
-        console.log(res)
         if(res.meta.status === 200) {
           this.menuList = res.data
         }else {
           return this.$message.error('获取失败')
         }
-
       })
     },
     flexBoxClick() {
       this.isActive = ! this.isActive
+    },
+    menuItemClick(path) {
+      this.activePath = '/' + path
     }
   }
 }
@@ -121,8 +129,9 @@ export default {
   }
   }
   .main {
-    padding: 0;
+    padding: 20px;
     margin: 0;
+    background-color: #eaedf1;
   }
 
 }
