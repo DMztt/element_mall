@@ -4,8 +4,6 @@ const Login = () => import('views/login/Login.vue')
 const Home = () => import('views/home/Home.vue')
 const HomeWelcome = () => import('views/home/homeChil/HomeWelcome.vue')
 
-const Users = () => import('views/users/Users.vue')
-
 Vue.use(VueRouter)
 
 const routes = [
@@ -27,15 +25,9 @@ const routes = [
       {
         path: 'welcome',
         component: HomeWelcome
-      },
-      {
-        path: '/users',
-        name: 'Users',
-        component: Users
-      },
+      }
     ]
-  },
-
+  }
 ]
 
 const router = new VueRouter({
