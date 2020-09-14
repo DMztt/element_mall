@@ -19,13 +19,19 @@
           :collapse="isActive"
           :collapse-transition="false"
           router
+          :default-active="activePath"
         >
           <el-submenu :index="'/' + item.id" v-for="(item, index) in menuList" :key="item.id">
             <template slot="title">
               <i :class="icons[item.id]"></i>
               <span>{{item.authName}}</span>
             </template>
-            <el-menu-item :index="'/' + item.path" v-for="(item, i) in menuList[index].children" :key="item.id">
+            <el-menu-item
+                :index="'/' + item.path"
+                v-for="item in menuList[index].children"
+                :key="item.id"
+                @click="savePath('/' + item.path)"
+                >
               <template slot="title">
                 <i class="el-icon-s-operation"></i>
                 <span>{{item.authName}}</span>
@@ -55,8 +61,12 @@ export default {
         102: 'el-icon-s-order',
         145: 'el-icon-s-marketing',
       },
-      isActive: false
+      isActive: false,
+      activePath: ''
     }
+  },
+  created() {
+    this.activePath = window.sessionStorage.getItem('activePath')
   },
   mounted() {
     this.getMenuList()
@@ -79,6 +89,9 @@ export default {
     },
     flexBoxClick() {
       this.isActive = ! this.isActive
+    },
+    savePath(activePath) {
+      window.sessionStorage.setItem('activePath', activePath)
     }
   }
 }
