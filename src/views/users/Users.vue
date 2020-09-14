@@ -102,7 +102,7 @@ export default {
     getUserList() {
       const { query, pagenum, pagesize } = this.queryInfo
       getUserList(query, pagenum, pagesize).then((res) => {
-        console.log(res)
+        // console.log(res)
         if (res.meta.status !== 200) return this.$message.error('获取信息失败')
         this.usersList = res.data.users
         this.total = res.data.total

@@ -6,7 +6,7 @@
       <el-table-column prop="path" label="路径" width="180"></el-table-column>
       <el-table-column prop="level" label="权限等级">
         <template v-slot="scoped">
-          <el-tag v-if="scoped.row.level === '0'">标签一</el-tag>
+          <el-tag v-if="scoped.row.level === '0'">标&emsp;签&nbsp;一</el-tag>
           <el-tag v-else-if="scoped.row.level === '1'" type="success">标签二</el-tag>
           <el-tag v-else type="info">标签三</el-tag>
         </template>
@@ -30,7 +30,7 @@ export default {
   methods: {
     getList() {
       getRightsList().then((res) => {
-        console.log(res)
+        // console.log(res)
         this.rightsList = res.data
       })
     },

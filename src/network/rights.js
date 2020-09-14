@@ -6,3 +6,11 @@ export function getRightsList() {
     method: 'get'
   })
 }
+
+
+export function getRoles() {
+  return request({
+    url: 'roles',
+    method: 'get'
+  })
+}

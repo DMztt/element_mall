@@ -5,6 +5,7 @@ const Home = () => import('views/home/Home.vue')
 const HomeWelcome = () => import('views/home/homeChil/HomeWelcome.vue')
 const Users = () => import('views/users/Users.vue')
 const Rights = () => import('views/rights/Rights.vue')
+const Roles = () => import('views/rights/Roles.vue')
 
 Vue.use(VueRouter)
 
@@ -35,6 +36,10 @@ const routes = [
       {
         path: '/rights',
         component: Rights
+      },
+      {
+        path: '/roles',
+        component: Roles
       }
     ]
   }
@@ -52,7 +57,6 @@ router.beforeEach((to,from,next) => {
     return
   }
   next()
-
 })
 
 export default router
