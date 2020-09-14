@@ -121,7 +121,7 @@ export default {
   }
   }
   .main {
-    padding: 0;
+    padding: 20px;
     margin: 0;
   }
 

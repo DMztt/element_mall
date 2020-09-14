@@ -141,4 +141,7 @@ export default {
 .user_table {
   margin-top: 20px;
 }
+.breadcrumb {
+  margin-bottom: 15px;
+}
 </style>
