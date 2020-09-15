@@ -7,7 +7,12 @@ export function getRightsList() {
   })
 }
 
-
+export function getRoleList() {
+  return request({
+    url: 'rights/tree',
+    method: 'get'
+  })
+}
 export function getRoles() {
   return request({
     url: 'roles',
