@@ -44,7 +44,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog title="提示" :visible.sync="setRightDialog" width="50%">
+    <el-dialog title="提示" :visible.sync="setRightDialog" width="50%" @close="resetList">
       <el-tree
         :data="rightList"
         :props="defaultProps"
@@ -52,17 +52,18 @@
         default-expand-all
         node-key="id"
         :default-checked-keys="defaultKeys"
+        ref="treeRef"
       ></el-tree>
       <span slot="footer" class="dialog-footer">
         <el-button @click="setRightDialog = false">取 消</el-button>
-        <el-button type="primary" @click="setRightDialog = false">确 定</el-button>
+        <el-button type="primary" @click="allowRights">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getRoles, getRoleList } from 'network/rights'
+import { getRoles, getRoleList, postRinghts } from 'network/rights'
 export default {
   name: 'Rules',
   data() {
@@ -74,7 +75,8 @@ export default {
         children: 'children',
         label: 'authName',
       },
-      defaultKeys: []
+      defaultKeys: [],
+      roleId: null
     }
   },
   mounted() {
@@ -89,7 +91,8 @@ export default {
     },
     async showSetRightDialong(role) {
       const { data: res } = await getRoleList()
-      console.log(res)
+      this.roleId = role.id
+      console.log(role,'222')
       this.getDefKeys(role, this.defaultKeys)
       this.rightList = res
       this.setRightDialog = true
@@ -101,8 +104,24 @@ export default {
       node.children.forEach(item => {
         this.getDefKeys(item, arr)
       })
+    },
+    resetList() {
+      this.defaultKeys = []
+    },
+    allowRights() {
+      const keys = [
+        ...this.$refs.treeRef.getCheckedKeys(),
+        ...this.$refs.treeRef.getHalfCheckedKeys()
+      ]
+      // console.log(keys)
+      const idStr = keys.join(',')
+      const roleId = this.roleId
+      console.log(roleId)
+      postRinghts(roleId, idStr).then(res => {
+        console.log(res)
+      })
     }
-  },
+  }
 }
 </script>
 

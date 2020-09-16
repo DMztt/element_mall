@@ -8,15 +8,15 @@
     <el-card class="box-card">
       <el-row :gutter="20">
         <el-col :span="8">
-           <el-input
-        class="card-input"
-        placeholder="请输入内容"
-        v-model="queryInfo.query"
-        clearable
-        @clear="queryUser"
-      >
-        <el-button slot="append" icon="el-icon-search" @click="queryUser"></el-button>
-      </el-input>
+          <el-input
+            class="card-input"
+            placeholder="请输入内容"
+            v-model="queryInfo.query"
+            clearable
+            @clear="queryUser"
+          >
+            <el-button slot="append" icon="el-icon-search" @click="queryUser"></el-button>
+          </el-input>
         </el-col>
         <el-col :span="4">
           <el-button type="primary" @click="dialogVisible = true">添加用户</el-button>
@@ -39,7 +39,13 @@
             <el-button size="mini" type="primary" icon="el-icon-edit" rounde></el-button>
             <el-button size="mini" type="danger" icon="el-icon-delete" rounde></el-button>
             <el-tooltip :enterable="false" effect="dark" content="分配角色" placement="top">
-              <el-button size="mini" type="warning" icon="el-icon-s-tools" rounde></el-button>
+              <el-button
+                @click="allowRole(scope.row)"
+                size="mini"
+                type="warning"
+                icon="el-icon-s-tools"
+                rounde
+              ></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -76,11 +82,30 @@
         <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog title="提示" :visible.sync="rightsDialog" width="30%" @close="resetForm">
+      <div>
+        <p>当前用户:{{userInfo.username}}</p>
+        <p>当前角色:{{userInfo.role_name}}</p>
+        <span>分配新角色</span>
+        <el-select v-model="rolesListValue" placeholder="请选择">
+          <el-option
+            v-for="item in rolesList"
+            :key="item.id"
+            :label="item.roleName"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="rightsDialog = false">取 消</el-button>
+        <el-button type="primary" @click="saveRightId">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getUserList, getUserState } from 'network/users'
+import { getUserList, getUserState, getUserRoles, assignUserRole } from 'network/users'
 export default {
   name: 'Users',
   data() {
@@ -93,10 +118,18 @@ export default {
       usersList: [],
       total: null,
       dialogVisible: false,
+      rightsDialog: false,
+      userInfo: {},
+      timer: null,
+      rolesList: [],
+      rolesListValue: ''
     }
   },
   mounted() {
     this.getUserList()
+    // this.timer = setInterval(() => {
+    //   console.log('timer')
+    // },1000)
   },
   methods: {
     getUserList() {
@@ -129,12 +162,36 @@ export default {
         // console.log(res)
         if (res.meta.status !== 200) {
           this.$message.error('修改失败')
-
         }
         this.getUserList()
       })
     },
+    allowRole(userInfo) {
+      this.userInfo = userInfo
+      getUserRoles().then(res => {
+        // console.log(res)
+        this.rolesList = res.data
+      })
+      this.rightsDialog = true
+    },
+    saveRightId() {
+      if(!this.rolesListValue) {
+        return this.$message.error('请选择分配角色')
+      }
+
+      assignUserRole(this.userInfo.id, this.rolesListValue).then(res => {
+        console.log(res)
+      })
+      this.rightsDialog = false
+    },
+    resetForm() {
+      this.userInfo = {}
+      this.rolesListValue = ''
+    }
   },
+  beforeDestroy() {
+    clearInterval(this.timer)
+  }
 }
 </script>
 <style scoped lang="less">

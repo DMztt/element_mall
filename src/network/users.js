@@ -18,3 +18,20 @@ export function getUserState(uid, type) {
     method: 'put'
   })
 }
+
+export function getUserRoles() {
+  return request({
+    url: 'roles',
+    method: 'get'
+  })
+}
+
+export function assignUserRole(id,rid) {
+  return request({
+    url: `users/${id}/role`,
+    method: 'put',
+    data: {
+      rid: rid
+    }
+  })
+}

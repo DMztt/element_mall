@@ -19,3 +19,13 @@ export function getRoles() {
     method: 'get'
   })
 }
+
+export function postRinghts(roleid,idStr) {
+  return request({
+    url: `roles/${roleid}/rights`,
+    method: 'post',
+    data: {
+      rids: idStr
+    }
+  })
+}
