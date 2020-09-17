@@ -29,3 +29,14 @@ export function addCateList(data) {
     data
   })
 }
+
+export function getParamsList(id, only) {
+  return request({
+    url: `categories/${id}/attributes`,
+    method: 'get',
+    params: {
+      sel: only
+    }
+  })
+
+}
