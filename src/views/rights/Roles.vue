@@ -1,10 +1,6 @@
 <template>
   <div>
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>权限管理</el-breadcrumb-item>
-      <el-breadcrumb-item>角色列表</el-breadcrumb-item>
-    </el-breadcrumb>
+    <bread :titles="titles" />
     <el-table :data="rolesList" stripe style="width: 100%" border>
       <el-table-column type="expand">
         <template v-slot="scoped">
@@ -63,9 +59,13 @@
 </template>
 
 <script>
+import Bread from 'components/common/bread/Bread'
 import { getRoles, getRoleList, postRinghts } from 'network/rights'
 export default {
   name: 'Rules',
+  components: {
+    Bread
+  },
   data() {
     return {
       rolesList: [],
@@ -76,7 +76,8 @@ export default {
         label: 'authName',
       },
       defaultKeys: [],
-      roleId: null
+      roleId: null,
+      titles: ['权限管理','角色列表']
     }
   },
   mounted() {
@@ -128,6 +129,9 @@ export default {
 <style lang="less" scoped>
 .el-tag {
   margin: 8px;
+}
+.el-table {
+  margin-top: 15px;
 }
 </style>>
 

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <bread :titles="titles" />
     <el-table :data="rightsList" stripe style="width: 100%" border>
       <el-table-column type="index"></el-table-column>
       <el-table-column prop="authName" label="权限名称" width="180"></el-table-column>
@@ -16,12 +17,17 @@
 </template>
 
 <script>
+import Bread from 'components/common/bread/Bread'
 import { getRightsList } from 'network/rights'
 export default {
   name: 'Rights',
+  components: {
+    Bread
+  },
   data() {
     return {
       rightsList: [],
+      titles: ['权限管理','权限列表']
     }
   },
   mounted() {
@@ -39,4 +45,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.el-table {
+  margin-top: 15px;
+}
 </style>
