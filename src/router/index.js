@@ -9,6 +9,7 @@ const Roles = () => import('views/rights/Roles.vue')
 const Categroy = () => import('views/shop/Categroy.vue')
 const GoodsList = () => import('views/shop/GoodsList.vue')
 const CateParams = () => import('views/shop/CateParams.vue')
+const AddGoods = () => import('views/shop/AddGoods.vue')
 
 Vue.use(VueRouter)
 
@@ -55,6 +56,10 @@ const routes = [
       {
         path: '/params',
         component: CateParams
+      },
+      {
+        path: '/goods/add',
+        component: AddGoods
       }
     ]
   }

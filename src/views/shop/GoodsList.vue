@@ -1,5 +1,6 @@
 <template>
   <div>
+    <el-button type="primary" size="small" @click="jumpAddGoods">添加商品</el-button>
     <el-table :data="list" stripe style="width: 100%">
       <el-table-column type="index" label="#"></el-table-column>
       <el-table-column prop="goods_name" label="商品名称" ></el-table-column>
@@ -45,6 +46,9 @@ export default {
         this.list = res.data['goods']
         this.total = res.data.total
       })
+    },
+    jumpAddGoods() {
+      this.$router.push('goods/add')
     }
   }
 }
