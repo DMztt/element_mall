@@ -9,6 +9,7 @@ module.exports = {
         'common': 'components/common',
         'network': '@/network',
         'views': '@/views',
+        'utils': '@/utils',
       }
     }
   },

@@ -70,3 +70,11 @@ export function editSubParams(id, attrId, attr_name, attr_sel, attr_vals) {
     }
   })
 }
+
+export function getGoodsList(params) {
+  return request({
+    url: 'goods',
+    method: 'get',
+    params
+  })
+}
