@@ -50,7 +50,7 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if(!valid) return
         loginSys(this.loginForm).then(res => {
-          console.log(res)
+          // console.log(res)
           if(res.meta.status !== 200) {
             this.$message({
               message: '用户名或密码错误，请您检查重新登录',
