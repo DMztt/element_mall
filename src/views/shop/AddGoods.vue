@@ -19,7 +19,7 @@
     <el-form
       :model="addForm"
       :rules="addFormRules"
-      ref="ruleForm"
+      ref="ruleFormRef"
       label-width="100px"
       label-position="top"
     >
@@ -57,8 +57,25 @@
           <el-form-item :label="item.attr_name" v-for="(item,i) in manyTableList" :key="i"/>
         </el-tab-pane>
         <el-tab-pane label="商品属性" name="2">商品属性</el-tab-pane>
-        <el-tab-pane label="商品图片" name="3">商品图片</el-tab-pane>
-        <el-tab-pane label="商品内容" name="4">商品内容</el-tab-pane>
+        <el-tab-pane label="商品图片" name="3">
+          <el-upload
+            action="http://timemeetyou.com:8889/api/private/v1/upload"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            list-type="picture"
+            :headers="headersObj"
+            :on-success="handleSuccess"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+          </el-upload>
+        </el-tab-pane>
+        <el-tab-pane label="商品内容" name="4">
+          <quill-editor
+            v-model="addForm.goods_introduce"
+            ref="myQuillEditor"
+          ></quill-editor>
+          <el-button type="primary" @click="submitValue">添加按钮</el-button>
+        </el-tab-pane>
       </el-tabs>
     </el-form>
   </div>
@@ -77,7 +94,7 @@ export default {
         goods_number: 0,
         goods_weight: 0,
         goods_introduce: '',
-        pics: '',
+        pics: [],
         attrs: '',
       },
       cateList: [],
@@ -103,16 +120,19 @@ export default {
         label: 'cat_name',
       },
       selectKeys: [],
-      manyTableList: []
+      manyTableList: [],
+      headersObj: {
+        Authorization: window.sessionStorage.getItem('token'),
+      },
     }
   },
   computed: {
     cateId() {
-      if(this.addForm.goods_cat.length === 3) {
+      if (this.addForm.goods_cat.length === 3) {
         return this.addForm.goods_cat[2]
       }
       return null
-    }
+    },
   },
   mounted() {
     this.getList()
@@ -135,18 +155,40 @@ export default {
       }
     },
     tabClick(active) {
-      if(this.activeIndex === '1') {
-        console.log(typeof(this.cateId))
-        getParamsList(this.cateId, 'many').then(res => {
+      if (this.activeIndex === '1') {
+        console.log(typeof this.cateId)
+        getParamsList(this.cateId, 'many').then((res) => {
           console.log(res)
-          res.data.forEach(item => {
-            return item.attr_vals = item.attr_vals.length === 0 ? [] : item.attr_vals.split('')
+          res.data.forEach((item) => {
+            return (item.attr_vals =
+              item.attr_vals.length === 0 ? [] : item.attr_vals.split(''))
           })
-          if(res.meta.status === 200) {
+          if (res.meta.status === 200) {
             this.manyTableList = res.data
           }
         })
       }
+    },
+    handlePreview() {},
+    handleRemove(file, fileList) {
+      console.log(file, fileList)
+      const filePath = file.response.data.tmp_path
+      const index = this.addForm.pics.findIndex((item) => item === filePath)
+      this.addForm.pics.splice(index, 1)
+    },
+    handleSuccess(resp) {
+      // console.log(resp)
+      this.addForm.pics.push(resp.data.tmp_path)
+    },
+    submitValue() {
+      this.$refs.ruleFormRef.validate(valid => {
+        if(!valid) {
+          return this.$message.error('请填写必要信息')
+        }
+        let form = JSON.parse(JSON.stringify(this.addForm))
+        // console.log(form)
+        form.goods_cat = form.goods_cat.join(',')
+      })
     }
   },
 }
@@ -159,6 +201,9 @@ export default {
 <style  lang="less">
 .alert {
   margin: 15px;
+}
+.ql-editor {
+  height: 200px
 }
 </style>
 
