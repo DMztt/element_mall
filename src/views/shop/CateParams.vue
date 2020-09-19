@@ -192,13 +192,13 @@ export default {
         const id = this.selectKeys[this.selectKeys.length - 1]
         // console.log(id)
         getParamsList(id, this.activeName).then((res) => {
-          console.log(res)
+          // console.log(res)
           res.data.forEach((item) => {
             item.attr_vals = item.attr_vals ? item.attr_vals.split(' ') : []
             item.inputVisible = false
             item.inputValue = ''
           })
-          console.log(res)
+          // console.log(res)
           if (this.activeName === 'many') {
             this.manyTableList = res.data
           } else {

@@ -23,7 +23,13 @@
       label-width="100px"
       label-position="top"
     >
-      <el-tabs :tab-position="'left'" v-model="activeIndex" style="margin-top: 20px">
+      <el-tabs
+        :tab-position="'left'"
+        v-model="activeIndex"
+        style="margin-top: 20px"
+        :before-leave="beforeClick"
+        @tab-click="tabClick"
+      >
         <el-tab-pane label="基本信息" name="0">
           <el-form-item label="商品名称" prop="goods_name">
             <el-input v-model="addForm.goods_name"></el-input>
@@ -47,7 +53,9 @@
             ></el-cascader>
           </el-form-item>
         </el-tab-pane>
-        <el-tab-pane label="商品参数" name="1">商品参数</el-tab-pane>
+        <el-tab-pane label="商品参数" name="1">
+          <el-form-item :label="item.attr_name" v-for="(item,i) in manyTableList" :key="i"/>
+        </el-tab-pane>
         <el-tab-pane label="商品属性" name="2">商品属性</el-tab-pane>
         <el-tab-pane label="商品图片" name="3">商品图片</el-tab-pane>
         <el-tab-pane label="商品内容" name="4">商品内容</el-tab-pane>
@@ -57,7 +65,7 @@
 </template>
 
 <script>
-import { getCateList } from 'network/shop'
+import { getCateList,getParamsList } from 'network/shop'
 export default {
   data() {
     return {
@@ -95,6 +103,15 @@ export default {
         label: 'cat_name',
       },
       selectKeys: [],
+      manyTableList: []
+    }
+  },
+  computed: {
+    cateId() {
+      if(this.addForm.goods_cat.length === 3) {
+        return this.addForm.goods_cat[2]
+      }
+      return null
     }
   },
   mounted() {
@@ -103,13 +120,34 @@ export default {
   methods: {
     getList() {
       getCateList().then((res) => {
-        console.log(res)
+        // console.log(res)
         this.cateList = res.data
       })
     },
     handleChange() {
       console.log(this.addForm.goods_cat)
     },
+    beforeClick(newActive, oldValue) {
+      // console.log(newActive,oldValue)
+      if (this.activeIndex === '0' && this.addForm.goods_cat.length !== 3) {
+        this.$message.error('请选择分类')
+        return false
+      }
+    },
+    tabClick(active) {
+      if(this.activeIndex === '1') {
+        console.log(typeof(this.cateId))
+        getParamsList(this.cateId, 'many').then(res => {
+          console.log(res)
+          res.data.forEach(item => {
+            return item.attr_vals = item.attr_vals.length === 0 ? [] : item.attr_vals.split('')
+          })
+          if(res.meta.status === 200) {
+            this.manyTableList = res.data
+          }
+        })
+      }
+    }
   },
 }
 </script>
